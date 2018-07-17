@@ -2,7 +2,8 @@
 from Classes.Jogador.Jogador import Jogador
 from Classes.Inimigos.Inimigos import Rato
 from Classes.Batalha.Batalha import batalha
-from Classes.Itens.Poção import Poção
+
+#from Classes.Itens.Poção import Poção
 from random import randint
 from time import sleep
 import os
@@ -51,7 +52,7 @@ while True:
         jogador.getStatus()
         loading("Explorando...", 0.5)
         explorar = randint(1, 5) #gera um número aleátorio, se for 1,2,3 = fight com rato
-        if explorar == 1 or explorar == 2 or explorar == 3: #Tela de combate
+        if explorar <= 3: #Tela de combate
             limparTela()
             jogador.getStatus()
             rato.getStatus()
@@ -59,7 +60,7 @@ while True:
             print(30*"-")
             while rato.status == "Vivo":
                 print("1 - Lutar\n2 - Fugir.") #Menu de Ataques
-                ataques = input()
+                ataques = input("| ?: ")
                 print(5*"=")
                 #Ataque normal
                 if ataques == "1":
@@ -68,30 +69,20 @@ while True:
                 if ataques == "2":
                     limparTela()
                     print("Você fugiu do combate.")
-                    jogador.vida = 100
-                    jogador.mana = 100
                     break
                 #Quando o jogador morre.
                 if jogador.vida <=0:
                     print(f"{jogador.name} morreu!\nGAMER OVER")
                     fim_de_jogo = True
                     break
-                #Quando inimigo morre.
-                if rato.vida <=0:
-                    rato.getStatus()
-                    #print("O rato dropou 1 Poção")
-                    #jogador.inventario += rato.drop
-                    jogador.vida = 100
-                    jogador.mana = 100
-                    sleep(0.5)
-                    limparTela()
+                if rato.vida <= 0:
+                    rato.status = "Morto"
+                    jogador.vida = 300
+                    jogador.mana = 150
         else:
             print("Nada foi encontrado.")
             sleep(1.5)
             limparTela()
-        if rato.vida <= 0 and rato.status == "Morto":
-            rato.vida = 50
-            rato.status = "Vivo"
     if escolha == "2": #Carregamento da tela de inventario
         limparTela()
         loading("\nCarregando inventário...", 0.5)
@@ -100,6 +91,8 @@ while True:
         limparTela()
     if escolha == "3" or fim_de_jogo == True:
         break
-
+    if rato.status == "Morto" and rato.vida <= 0:
+        rato.status = "Vivo"
+        rato.vida = 150
 print("Você saiu do Jogo!")
 sleep(2)

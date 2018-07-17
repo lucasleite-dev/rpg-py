@@ -4,7 +4,7 @@ from random import uniform
 
 class Jogador:
 
-    def __init__(self, vida_max=100, vida=100, mana=100, ataque=15,defesa=50, status="Vivo", name=""):
+    def __init__(self, vida=300, vida_max = 300,mana=150, ataque=55,defesa=110, status="Vivo", name=""):
         self.vida_max = vida_max
         self.vida = vida
         self.mana = mana
@@ -43,6 +43,6 @@ class Jogador:
         print("|              Status              |")
         print("V----------------------------------V")
         print(f"| Nome: {self.name}" + " "*(27-len(self.name)) + "|")
-        print(f"| HP  : {self.vida}" + " "*(27-len(str(self.vida))) + "|")
+        print(f"| HP  : {self.vida}" + f"/{self.vida_max}" + " "*(23-len(str(self.vida))) + "|")
         print(f"| MP  : {self.mana}" + " "*(27-len(str(self.mana))) + "|")
         print("^----------------//----------------^")

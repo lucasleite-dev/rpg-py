@@ -18,4 +18,4 @@ class Rato:
         if self.vida <= 0:
             self.status = "Morto"
             self.vida = 0
-        return dano
+        return int(dano / (1+self.defesa/100))

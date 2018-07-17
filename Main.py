@@ -66,25 +66,22 @@ while True:
     if escolha == "1": #Carregamento de tela da Exploração
         statusJogador()
         print("Explorando", end="", flush=True)
-        sleep(1)
+        sleep(0.5)
         print(".", end="", flush=True)
-        sleep(1)
+        sleep(0.5)
         print(".", end="", flush=True)
-        sleep(1)
+        sleep(0.5)
         print(".")
         explorar = randint(1, 5) #gera um número aleátorio, se for 1,2,3 = fight com rato
-    """if escolha == "2":
+    if escolha == "2": #Carregamento da tela de inventario
         print("Carregando inventário", end="", flush=True)
-        sleep(1)
+        sleep(0.5)
         print(".", end="", flush=True)
-        sleep(1)
+        sleep(0.5)
         print(".", end="", flush=True)
-        sleep(1)
+        sleep(0.5)
         print(".")
         print(jogador.inventario)
-        menuInventario = input("1 - Usar poção: ")
-        if menuInventario == "1":
-            jogador.inventario"""
     if escolha == "3" or fim_de_jogo == True:
         break
     if explorar == 1 or explorar == 2 or explorar == 3: #Tela de combate

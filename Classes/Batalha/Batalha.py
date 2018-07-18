@@ -33,19 +33,27 @@ def batalha(jogador, inimigo):
         print("+----------------------------------+")
         print("|               Menu               |")
         print("V----------------------------------V")
-        print(f"1 - Ataque Normal : 0 MP\n2 - Ataque Forte : 30 MP")
+        print("| 1 - Ataque Normal (00 MP)        |")
+        print("| 2 - Ataque Forte  (30 MP)        |")
+        print("| 3 - Usar item                    |")
+        print("^----------------//----------------^")
         escolha_ataque = input("| ?: ")
         print(20*"=")
         if escolha_ataque == "1":
             inimigo.levaDano(jogador.ataque)#Quando o inimigo recebe dano
             jogador.levaDano(inimigo.ataque)#Quando o jogador recebe dano
-        if escolha_ataque == "2" and jogador.mana >= 30:
-            inimigo.levaDano(jogador.ataque*2)#Quando o inimigo recebe dano
-            jogador.levaDano(inimigo.ataque)#Quando o jogador recebe dano
-            jogador.mana -= 30
-        elif escolha_ataque == "2" and jogador.mana < 30:
-            print("Mana insuficiente.")
-            sleep(0.5)
+        elif escolha_ataque == "2":
+            if jogador.mana < 30: # Mana insuficiente para o ataque
+                print("Mana insuficiente")
+                sleep(0.5)
+            else:
+                inimigo.levaDano(jogador.ataque*2)#Quando o inimigo recebe dano
+                jogador.levaDano(inimigo.ataque)#Quando o jogador recebe dano
+                jogador.mana -= 30
+        elif escolha_ataque == "3":
+            limparTela()
+            jogador.menuItens()
+
     if inimigo.status == "Morto":
         limparTela()
         jogador.exp += inimigo.exp

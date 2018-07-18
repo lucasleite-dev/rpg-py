@@ -1,8 +1,9 @@
 #Importações
 from Classes.Jogador.Jogador import Jogador
-from Classes.Inimigos.Inimigos import Rato
 from Classes.Batalha.Batalha import batalha
-
+#Importações de monstros
+from Classes.Inimigos.Inimigos import Rato
+from Classes.Inimigos.Inimigos import Urso
 #from Classes.Itens.Poção import Poção
 from random import randint
 from time import sleep
@@ -56,6 +57,9 @@ while True:
         if explorar <= 3: #Declara que o inimigo é um Rato
             inimigo = Rato()
             combate = True
+        if explorar == 4: #Declara que o inimigo é um Urso
+            inimigo = Urso()
+            combate = True
         if combate == True: #Tela de Combate
             limparTela()
             jogador.getStatus()
@@ -72,18 +76,16 @@ while True:
                     batalha(jogador, inimigo)
                 if ataques == "2":
                     limparTela()
+                    combate = False
                     print("Você fugiu do combate.")
                     break
                 #Quando o jogador morre.
-                if jogador.vida <=0:
+                if jogador.vida <= 0:
                     print(f"{jogador.name} morreu!\nGAMER OVER")
                     fim_de_jogo = True
                     break
-                if inimigo.vida <= 0:
-                    inimigo.status = "Morto"
-                    jogador.vida = jogador.vida_max
-                    jogador.mana = jogador.mana_max
-                    combate = False
+            if inimigo.status == "Morto":
+                combate = False
         else:
             print("Nada foi encontrado.")
             sleep(1.5)
@@ -96,8 +98,23 @@ while True:
         limparTela()
     if escolha == "3" or fim_de_jogo == True:
         break
-    if inimigo.status == "Morto" and inimigo.vida <= 0:
-        inimigo.status = "Vivo"
+    if jogador.exp >= jogador.exp_max:
+        jogador.level += 1
+        jogador.exp -= jogador.exp_max
+        jogador.exp_max = round(jogador.exp_max * 1.5)
+        jogador.vida_max += 10
+        jogador.mana_max += 5
+        jogador.vida = jogador.vida_max
+        jogador.mana = jogador.mana_max
+        jogador.getStatus()
+        print("**** LEVEL UP ****")
+        sleep(1)
+        limparTela()
+    if inimigo.status == "Morto":
+        combate = False
+        jogador.vida = jogador.vida_max
+        jogador.mana = jogador.mana_max
         inimigo.vida = inimigo.vida_max
+        inimigo.status = "Vivo"    
 print("Você saiu do Jogo!")
 sleep(2)

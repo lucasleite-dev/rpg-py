@@ -4,7 +4,7 @@ from random import uniform
 
 class Inimigo:
 
-    def __init__(self, name, vida=150, vida_max = 150,ataque=25, defesa=100, exp=15, status="Vivo"):
+    def __init__(self, name, vida=150, vida_max = 150,ataque=25, defesa=100, exp=35, status="Vivo"):
         self.name = name
         self.vida = vida
         self.vida_max = vida_max
@@ -26,7 +26,8 @@ class Inimigo:
         print("V----------------------------------V")
         print(f"| Nome  : {self.name}" + " "*(25-len(self.name)) + "|")
         print(f"| HP    : {self.vida}" + f"/{self.vida_max}" + " "*(21-len(str(self.vida))) + "|")
-        print(f"| Estado: {self.status}" + " "*(25-len(self.status)) + "|")
+        print(f"| Exp   : {self.exp}" + " "*(25-len(str(self.exp))) + "|")
+        print(f"| Estado: {self.status}" + " "*(25-len(str(self.status))) + "|")
         print("^----------------//----------------^")
 
 class Rato(Inimigo):
@@ -37,4 +38,5 @@ class Rato(Inimigo):
 class Urso(Inimigo):
 
     def __init__(self):
-        super().__init__("Urso")
+        super().__init__("Urso", vida=225, vida_max=225, ataque=50, defesa=150, exp=75)
+    

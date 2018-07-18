@@ -34,7 +34,32 @@ def loading(mensagem, tempo):
 #Váriaveis
 jogador = Jogador()
 fim_de_jogo = False
-jogador.name = input("Nome: ")
+print("+----------------------------------+")
+print("|             RPG-PY               |")
+print("^----------------//----------------^")
+print("+----------------------------------+")
+print("|         Pressione Enter          |")
+print("^----------------//----------------^")
+input("")
+limparTela()
+print("+----------------------------------+")
+print("|               Menu               |")
+print("V----------------------------------V")
+print("| 1 - Criar personagem             |")
+print("| 2 - Selecionar personagem        |")
+print("| 3 - Sair do Jogo                 |")
+print("^----------------//----------------^")
+escolhaMenu = input("| ?: ")
+limparTela()
+if escolhaMenu == "1":
+    print("+----------------------------------+")
+    print("|       Criação de Personagem      |")
+    print("V----------------------------------V")
+    jogador.name = input("Nome: ")
+    print("Classes: \n1 - Guerreiro")
+    escolhaClasse = input("| ?:")
+    if escolhaClasse == "1":
+        jogador.classe = "Guerreiro"
 limparTela()
 explorar = ""
 inimigo = ""

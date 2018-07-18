@@ -15,7 +15,7 @@ def limparTela():
 
 class Jogador:
 
-    def __init__(self, level=1, vida=300, vida_max=300, mana=150, mana_max=150,ataque=55,defesa=110, status="Vivo", name=""):
+    def __init__(self, level=1, vida=300, vida_max=300, mana=150, mana_max=150,ataque=55,defesa=110, status="Vivo", name="", classe=""):
         self.level = level
         self.exp = 0
         self.exp_max = round(75)
@@ -28,6 +28,7 @@ class Jogador:
         self.status = status
         self.inventario = {"Poção de Mana": 2, "Poção de Vida": 3}
         self.name = name
+        self.classe = classe
 
     def levaDano(self, dano):
         self.vida -= int(dano / (1+self.defesa/100))
@@ -42,11 +43,12 @@ class Jogador:
         print("+----------------------------------+")
         print("|              Status              |")
         print("V----------------------------------V")
-        print(f"| Nome : {self.name}" + " "*(26-len(self.name)) + "|")
-        print(f"| HP   : {self.vida}" + f"/{self.vida_max}" + " "*(25-len(str(self.vida))-len(str(self.vida_max))) + "|")
-        print(f"| MP   : {self.mana}" + f"/{self.mana_max}" +  " "*(25-len(str(self.mana))-len(str(self.mana_max))) + "|")
-        print(f"| Exp  : {self.exp}" + f"/{self.exp_max}" + " "*(25-len(str(self.exp))-len(str(self.exp_max))) + "|")
-        print(f"| Level: {self.level}" + " "*(26-len(str(self.level))) + "|")
+        print(f"| Nome  : {self.name}" + " "*(25-len(self.name)) + "|")
+        print(f"| HP    : {self.vida}" + f"/{self.vida_max}" + " "*(24-len(str(self.vida))-len(str(self.vida_max))) + "|")
+        print(f"| MP    : {self.mana}" + f"/{self.mana_max}" +  " "*(24-len(str(self.mana))-len(str(self.mana_max))) + "|")
+        print(f"| Exp   : {self.exp}" + f"/{self.exp_max}" + " "*(24-len(str(self.exp))-len(str(self.exp_max))) + "|")
+        print(f"| Level : {self.level}" + " "*(25-len(str(self.level))) + "|")
+        print(f"| Classe: {self.classe}" + " "*(25-len(self.classe)) + "|")
         print("^----------------//----------------^")
 
     def getInventario(self): # Função para retornar os itens do inventário

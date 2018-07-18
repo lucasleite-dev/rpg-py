@@ -41,12 +41,12 @@ def batalha(jogador, inimigo):
             jogador.levaDano(inimigo.ataque)#Quando o jogador recebe dano
             jogador.mana -= 30
             verificaStatus(jogador, inimigo)
-            combatLog(jogador, inimigo)        
+            combatLog(jogador, inimigo, 2)        
     if inimigo.status == "Morto":
         verificaStatus(jogador,inimigo)
         combatLog(jogador, inimigo)
         print("+----------------------------------+")
         print("| Pressione enter para voltar      |")
         print("^----------------//----------------^")
-        e = input("")
+        input("")
         limparTela()

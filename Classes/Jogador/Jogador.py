@@ -4,10 +4,11 @@ from random import uniform
 
 class Jogador:
 
-    def __init__(self, vida=300, vida_max = 300,mana=150, ataque=55,defesa=110, status="Vivo", name=""):
+    def __init__(self, vida=300, vida_max=300,mana=150, mana_max=150,ataque=55,defesa=110, status="Vivo", name=""):
         self.vida_max = vida_max
         self.vida = vida
         self.mana = mana
+        self.mana_max = mana_max
         self.ataque = ataque
         self.defesa = defesa
         self.status = status
@@ -34,11 +35,10 @@ class Jogador:
         print("+----------------------------------+")
         print("| Pressione enter para voltar      |")
         print("^----------------//----------------^")
-        e = input("")
+        input("")
 
     # Mostra o status do jogador, nome;hp;mp;etc;
     def getStatus(self):
-        teste = str(self.vida)
         print("+----------------------------------+")
         print("|              Status              |")
         print("V----------------------------------V")

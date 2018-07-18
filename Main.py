@@ -31,11 +31,12 @@ def loading(mensagem, tempo):
 
 #Váriaveis
 jogador = Jogador()
-rato = Rato()
 fim_de_jogo = False
 jogador.name = input("Nome: ")
 limparTela()
 explorar = ""
+inimigo = ""
+combate = False
 
 while True:
     jogador.getStatus()
@@ -52,20 +53,23 @@ while True:
         jogador.getStatus()
         loading("Explorando...", 0.5)
         explorar = randint(1, 5) #gera um número aleátorio, se for 1,2,3 = fight com rato
-        if explorar <= 3: #Tela de combate
+        if explorar <= 3: #Declara que o inimigo é um Rato
+            inimigo = Rato()
+            combate = True
+        if combate == True: #Tela de Combate
             limparTela()
             jogador.getStatus()
-            rato.getStatus()
-            print(f"Entrou em combate com um {rato.name}!")
+            inimigo.getStatus()
+            print(f"Entrou em combate com um {inimigo.name}!")
             print(30*"-")
-            while rato.status == "Vivo":
+            while inimigo.status == "Vivo":
                 print("1 - Lutar\n2 - Fugir.") #Menu de Ataques
                 ataques = input("| ?: ")
                 print(5*"=")
                 #Ataque normal
                 if ataques == "1":
                     limparTela()
-                    batalha(jogador, rato)
+                    batalha(jogador, inimigo)
                 if ataques == "2":
                     limparTela()
                     print("Você fugiu do combate.")
@@ -75,10 +79,11 @@ while True:
                     print(f"{jogador.name} morreu!\nGAMER OVER")
                     fim_de_jogo = True
                     break
-                if rato.vida <= 0:
-                    rato.status = "Morto"
-                    jogador.vida = 300
-                    jogador.mana = 150
+                if inimigo.vida <= 0:
+                    inimigo.status = "Morto"
+                    jogador.vida = jogador.vida_max
+                    jogador.mana = jogador.mana_max
+                    combate = False
         else:
             print("Nada foi encontrado.")
             sleep(1.5)
@@ -91,8 +96,8 @@ while True:
         limparTela()
     if escolha == "3" or fim_de_jogo == True:
         break
-    if rato.status == "Morto" and rato.vida <= 0:
-        rato.status = "Vivo"
-        rato.vida = 150
+    if inimigo.status == "Morto" and inimigo.vida <= 0:
+        inimigo.status = "Vivo"
+        inimigo.vida = inimigo.vida_max
 print("Você saiu do Jogo!")
 sleep(2)

@@ -25,7 +25,7 @@ class Inimigo:
         print("|           Status Inimigo         |")
         print("V----------------------------------V")
         print(f"| Nome  : {self.name}" + " "*(25-len(self.name)) + "|")
-        print(f"| HP    : {self.vida}" + f"/{self.vida_max}" + " "*(21-len(str(self.vida))) + "|")
+        print(f"| HP    : {self.vida}" + f"/{self.vida_max}" + " "*(24-len(str(self.vida))-len(str(self.vida_max))) + "|")
         print(f"| Exp   : {self.exp}" + " "*(25-len(str(self.exp))) + "|")
         print(f"| Estado: {self.status}" + " "*(25-len(str(self.status))) + "|")
         print("^----------------//----------------^")
@@ -39,4 +39,3 @@ class Urso(Inimigo):
 
     def __init__(self):
         super().__init__("Urso", vida=225, vida_max=225, ataque=50, defesa=150, exp=75)
-    

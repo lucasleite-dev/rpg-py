@@ -15,7 +15,7 @@ def limparTela():
 
 class Jogador:
 
-    def __init__(self, level=1, vida=300, vida_max=300, mana=150, mana_max=150,ataque=55,defesa=110, status="Vivo", name="", classe=""):
+    def __init__(self, level=1, vida=300, vida_max=300, mana=150, mana_max=150,ataque=55,defesa=110, status='Vivo', name='', classe=''):
         self.level = level
         self.exp = 0
         self.exp_max = round(75)
@@ -34,7 +34,7 @@ class Jogador:
         self.vida -= int(dano / (1+self.defesa/100))
         if self.vida <= 0:
             self.vida = 0
-            self.status = "Morto"
+            self.status = 'Morto'
         return int(dano / (1+self.defesa/100))
 
 
@@ -149,7 +149,7 @@ class Jogador:
                     print("^----------------//----------------^")
 
     def getLevel(self):
-        if self.exp >= self.exp_max:
+        if self.exp >= self.exp_max and self.status == 'Vivo':
             self.level += 1
             self.exp -= self.exp_max
             self.exp_max = round(self.exp_max * 1.5)

@@ -10,7 +10,14 @@ from random import randint
 from time import sleep
 import os
 import platform
+import sqlite3
 
+#Variáveis SQL
+conexão = sqlite3.connect('personages.db') #Conecta no Banco de dados
+cursor = conexão.cursor() #comando cursor
+#Váriaveis
+jogador = Jogador()
+fim_de_jogo = False
 #Funções úteis
 #Limpa a tela
 def limparTela():
@@ -31,9 +38,26 @@ def loading(mensagem, tempo):
         c += 1
     print("\n")
 
-#Váriaveis
-jogador = Jogador()
-fim_de_jogo = False
+def criar_tabela():#Cria uma tabela
+    cursor.execute("CREATE TABLE IF NOT EXISTS personagens (nome text, level integer, exp integer, exp_max integer, vida integer, vida_max integer, mana integer, mana_max integer, ataque integer, defesa integer, status text, classe text)")
+
+#Insere o novo char no banco de dados
+def inserir_na_tabela(jogador):
+    cursor.execute("""
+        INSERT INTO personagens (nome, level, exp, exp_max, vida, vida_max, mana, mana_max, ataque, defesa, status, classe)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?)
+        """, (jogador.name, jogador.level, jogador.exp, jogador.exp_max, jogador.vida, jogador.vida_max, jogador.mana, jogador.mana_max, jogador.ataque, jogador.defesa, jogador.status, jogador.classe))
+    conexão.commit()
+
+#Atualiza o jogador na tabela quando o jogador escolher Salvar no menu.
+def atualizar_tabela(jogador):
+    cursor.execute("""
+        UPDATE personagens
+        SET level = ?, exp = ?, exp_max = ?, vida = ?, vida_max = ?, mana = ?, mana_max = ?, ataque = ?, defesa = ?, status = ?
+        WHERE nome = ?
+        """, (jogador.level, jogador.exp, jogador.exp_max, jogador.vida, jogador.vida_max, jogador.mana, jogador.mana_max, jogador.ataque, jogador.defesa, jogador.status, jogador.name))
+    conexão.commit()
+#Tela inicial.
 print("+----------------------------------+")
 print("|             RPG-PY               |")
 print("^----------------//----------------^")
@@ -42,24 +66,36 @@ print("|         Pressione Enter          |")
 print("^----------------//----------------^")
 input("")
 limparTela()
+#Menu Inicial
 print("+----------------------------------+")
 print("|               Menu               |")
 print("V----------------------------------V")
 print("| 1 - Criar personagem             |")
 print("| 2 - Selecionar personagem        |")
-print("| 3 - Sair do Jogo                 |")
 print("^----------------//----------------^")
 escolhaMenu = input("| ?: ")
 limparTela()
+#Criação de Personagem
 if escolhaMenu == "1":
     print("+----------------------------------+")
     print("|       Criação de Personagem      |")
     print("V----------------------------------V")
-    jogador.name = input("Nome: ")
+    jogador.name = input('Nome: ')
     print("Classes: \n1 - Guerreiro")
-    escolhaClasse = input("| ?:")
-    if escolhaClasse == "1":
-        jogador.classe = "Guerreiro"
+    escolhaClasse = input('| ?:')
+    if escolhaClasse == '1':
+        jogador.classe = 'Guerreiro'
+        criar_tabela()
+        inserir_na_tabela(jogador)
+        print("Personagem criado com sucesso.")
+#Escolhe o personagem "Ainda n ta pronto, apenas mostra todos os personagens salvos no banco"
+elif escolhaMenu == "2":
+    cursor.execute("""
+    SELECT nome FROM personagens;
+    """)
+    for linha in cursor.fetchall():
+        print(linha)
+    input("")
 limparTela()
 explorar = ""
 inimigo = ""
@@ -72,7 +108,8 @@ while True:
     print("V----------------------------------V")
     print("| 1 - Explorar                     |")
     print("| 2 - Inventário                   |")
-    print("| 3 - Sair do Jogo                 |")
+    print("| 3 - Salvar                       |")
+    print("| 4 - Sair do Jogo                 |")
     print("^----------------//----------------^")
     escolha = input("| ?: ")
     limparTela()
@@ -122,7 +159,14 @@ while True:
         limparTela()
         jogador.getInventario()
         limparTela()
-    elif escolha == "3" or fim_de_jogo == True:
+    elif escolha == "3":
+        limparTela()
+        loading("\nSalvando...", 0.5)
+        limparTela()
+        atualizar_tabela(jogador)#Atualiza todos os dados do jogador no "Bando" de Dados
+        loading("\nJogo Salvo.", 1)
+        limparTela()
+    elif escolha == "4" or fim_de_jogo == True:
         break
     jogador.getLevel()
 print("Você saiu do Jogo!")

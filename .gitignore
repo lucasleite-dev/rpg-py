@@ -3,3 +3,4 @@
 __pycache__
 selecionar_personagem
 personagens
+*.db

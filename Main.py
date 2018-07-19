@@ -1,25 +1,25 @@
-#Importações
+# Importações
 from Classes.Jogador.Jogador import Jogador
 from Classes.Batalha.Batalha import batalha
-#Importações de monstros
+# Importações de monstros
 from Classes.Inimigos.Inimigos import Rato
 from Classes.Inimigos.Inimigos import Urso
 
-# Bibliotecas padrão
+#  Bibliotecas padrão
 from random import randint
 from time import sleep
 import os
 import platform
 import sqlite3
 
-#Variáveis SQL
-conexão = sqlite3.connect('personages.db') #Conecta no Banco de dados
-cursor = conexão.cursor() #comando cursor
-#Váriaveis
+# Variáveis SQL
+conexão = sqlite3.connect('personages.db') # Conecta no Banco de dados
+cursor = conexão.cursor() # comando cursor
+# Váriaveis
 jogador = Jogador()
 fim_de_jogo = False
-#Funções úteis
-#Limpa a tela
+# Funções úteis
+# Limpa a tela
 def limparTela():
     sistema = platform.system()
     if sistema == "Windows":
@@ -38,10 +38,10 @@ def loading(mensagem, tempo):
         c += 1
     print("\n")
 
-def criar_tabela():#Cria uma tabela
+def criar_tabela():# Cria uma tabela
     cursor.execute("CREATE TABLE IF NOT EXISTS personagens (nome text, level integer, exp integer, exp_max integer, vida integer, vida_max integer, mana integer, mana_max integer, ataque integer, defesa integer, status text, classe text)")
 
-#Insere o novo char no banco de dados
+# Insere o novo char no banco de dados
 def inserir_na_tabela(jogador):
     cursor.execute("""
         INSERT INTO personagens (nome, level, exp, exp_max, vida, vida_max, mana, mana_max, ataque, defesa, status, classe)
@@ -49,7 +49,7 @@ def inserir_na_tabela(jogador):
         """, (jogador.name, jogador.level, jogador.exp, jogador.exp_max, jogador.vida, jogador.vida_max, jogador.mana, jogador.mana_max, jogador.ataque, jogador.defesa, jogador.status, jogador.classe))
     conexão.commit()
 
-#Atualiza o jogador na tabela quando o jogador escolher Salvar no menu.
+# Atualiza o jogador na tabela quando o jogador escolher Salvar no menu.
 def atualizar_tabela(jogador):
     cursor.execute("""
         UPDATE personagens
@@ -57,7 +57,8 @@ def atualizar_tabela(jogador):
         WHERE nome = ?
         """, (jogador.level, jogador.exp, jogador.exp_max, jogador.vida, jogador.vida_max, jogador.mana, jogador.mana_max, jogador.ataque, jogador.defesa, jogador.status, jogador.name))
     conexão.commit()
-#Tela inicial.
+# Tela inicial.
+criar_tabela()
 print("+----------------------------------+")
 print("|             RPG-PY               |")
 print("^----------------//----------------^")
@@ -66,108 +67,167 @@ print("|         Pressione Enter          |")
 print("^----------------//----------------^")
 input("")
 limparTela()
-#Menu Inicial
-print("+----------------------------------+")
-print("|               Menu               |")
-print("V----------------------------------V")
-print("| 1 - Criar personagem             |")
-print("| 2 - Selecionar personagem        |")
-print("^----------------//----------------^")
-escolhaMenu = input("| ?: ")
-limparTela()
-#Criação de Personagem
-if escolhaMenu == "1":
-    print("+----------------------------------+")
-    print("|       Criação de Personagem      |")
-    print("V----------------------------------V")
-    jogador.name = input('Nome: ')
-    print("Classes: \n1 - Guerreiro")
-    escolhaClasse = input('| ?:')
-    if escolhaClasse == '1':
-        jogador.classe = 'Guerreiro'
-        criar_tabela()
-        inserir_na_tabela(jogador)
-        print("Personagem criado com sucesso.")
-#Escolhe o personagem "Ainda n ta pronto, apenas mostra todos os personagens salvos no banco"
-elif escolhaMenu == "2":
-    cursor.execute("""
-    SELECT nome FROM personagens;
-    """)
-    for linha in cursor.fetchall():
-        print(linha)
-    input("")
-limparTela()
-explorar = ""
-inimigo = ""
-combate = False
-
+# Menu Inicial
 while True:
-    jogador.getStatus()
     print("+----------------------------------+")
     print("|               Menu               |")
     print("V----------------------------------V")
-    print("| 1 - Explorar                     |")
-    print("| 2 - Inventário                   |")
-    print("| 3 - Salvar                       |")
-    print("| 4 - Sair do Jogo                 |")
+    print("| 1 - Criar personagem             |")
+    print("| 2 - Selecionar personagem        |")
+    print("| 3 - Sair                         |")
     print("^----------------//----------------^")
-    escolha = input("| ?: ")
+    escolhaMenu = input("| ?: ")
     limparTela()
-    if escolha == "1": #Carregamento de tela da Exploração
-        jogador.getStatus()
-        loading("Explorando...", 0.5)
-        explorar = randint(1, 5) #gera um número aleátorio, se for 1,2,3 = fight com rato
-        if explorar <= 3: #Declara que o inimigo é um Rato
-            inimigo = Rato()
-            combate = True
-        elif explorar == 4: #Declara que o inimigo é um Urso
-            inimigo = Urso()
-            combate = True
-        if combate == True: #Tela de Combate
-            limparTela()
-            jogador.getStatus()
-            inimigo.getStatus()
-            print(f"Entrou em combate com um {inimigo.name}!")
-            print(30*"-")
-            while inimigo.status == "Vivo":
-                print("1 - Lutar\n2 - Fugir.") #Menu de Ataques
-                ataques = input("| ?: ")
-                print(5*"=")
-                #Ataque normal
-                if ataques == "1":
-                    limparTela()
-                    batalha(jogador, inimigo)
-                elif ataques == "2":
-                    limparTela()
-                    combate = False
-                    print("Você fugiu do combate.")
-                    break
-                #Quando o jogador morre.
-                if jogador.vida <= 0:
-                    print(f"{jogador.name} morreu!\nGAMER OVER")
-                    fim_de_jogo = True
-                    break
-            if inimigo.status == "Morto":
-                combate = False
+    # Criação de Personagem
+    if escolhaMenu == "1":
+        print("+----------------------------------+")
+        print("|       Criação de Personagem      |")
+        print("V----------------------------------V")
+        jogador.name = input('Nome: ')
+        print("Classes: \n1 - Guerreiro")
+        escolhaClasse = input('| ?:')
+        if escolhaClasse == '1':
+            jogador.classe = 'Guerreiro'
+            inserir_na_tabela(jogador)
+            print("Personagem criado com sucesso.")
+    # Escolhe o personagem "Ainda n ta pronto, apenas mostra todos os personagens salvos no banco"
+    elif escolhaMenu == "2":
+        cursor.execute("""
+        SELECT nome, level FROM personagens;
+        """)
+        fetch = cursor.fetchall()
+        linhas = len(fetch)
+        if linhas > 0:
+            seletor = {}
+            c = 0
+            for linha in fetch:
+                c += 1
+                seletor[c] = linha
+            while True:
+                print("+----------------------------------+")
+                print("|     Escolha de personagens       |")
+                print("V----------------------------------V")
+                for key in seletor:
+                    print(f"| {key} - {seletor[key][0]} ({seletor[key][1]})" + " "*(27-len(str(seletor[key][0]))-len(str(key))-len(str(seletor[key][1]))) + "|")
+                if c < 5:
+                    j = c+1
+                    while j <= 5:
+                        print(f"| {str(j)} - [Vazio]                      |")
+                        j += 1
+                    j = 0
+                print("| 6 - Voltar                       |")
+                print("^----------------//----------------^")
+                escolha = input("| ?: ")
+                limparTela()
+                if escolha.isnumeric():
+                    if int(escolha) > 0 and int(escolha) <= c:
+                        personagem_name = seletor[int(escolha)][0]
+                        cursor.execute(f"""
+                        SELECT * FROM personagens WHERE nome = '{personagem_name}';
+                        """)
+                        fetch = cursor.fetchall()
+                        for item in fetch:
+                            jogador.name = item[0]
+                            jogador.level = item[1]
+                            jogador.exp = item[2]
+                            jogador.exp_max = item[3]
+                            jogador.vida = item[4]
+                            jogador.vida_max = item[5]
+                            jogador.mana = item[6]
+                            jogador.mana_max = item[7]
+                            jogador.ataque = item[8]
+                            jogador.defesa = item[9]
+                            jogador.status = item[10]
+                            jogador.classe = item[11]
+                        explorar = ""
+                        inimigo = ""
+                        combate = False
+                        while True:
+                            jogador.getStatus()
+                            print("+----------------------------------+")
+                            print("|               Menu               |")
+                            print("V----------------------------------V")
+                            print("| 1 - Explorar                     |")
+                            print("| 2 - Inventário                   |")
+                            print("| 3 - Salvar                       |")
+                            print("| 4 - Sair do Jogo                 |")
+                            print("^----------------//----------------^")
+                            escolha = input("| ?: ")
+                            limparTela()
+                            if escolha == "1": # Carregamento de tela da Exploração
+                                jogador.getStatus()
+                                loading("Explorando...", 0.5)
+                                explorar = randint(1, 5) # gera um número aleátorio, se for 1,2,3 = fight com rato
+                                if explorar <= 3: # Declara que o inimigo é um Rato
+                                    inimigo = Rato()
+                                    combate = True
+                                elif explorar == 4: # Declara que o inimigo é um Urso
+                                    inimigo = Urso()
+                                    combate = True
+                                if combate == True: # Tela de Combate
+                                    limparTela()
+                                    jogador.getStatus()
+                                    inimigo.getStatus()
+                                    print(f"Entrou em combate com um {inimigo.name}!")
+                                    print(30*"-")
+                                    while inimigo.status == "Vivo":
+                                        print("1 - Lutar\n2 - Fugir.") # Menu de Ataques
+                                        ataques = input("| ?: ")
+                                        print(5*"=")
+                                        # Ataque normal
+                                        if ataques == "1":
+                                            limparTela()
+                                            batalha(jogador, inimigo)
+                                        elif ataques == "2":
+                                            limparTela()
+                                            combate = False
+                                            print("Você fugiu do combate.")
+                                            break
+                                        # Quando o jogador morre.
+                                        if jogador.vida <= 0:
+                                            print(f"{jogador.name} morreu!\nGAMER OVER")
+                                            fim_de_jogo = True
+                                            break
+                                    if inimigo.status == "Morto":
+                                        combate = False
+                                else:
+                                    print("Nada foi encontrado.")
+                                    sleep(1.5)
+                                    limparTela()
+                            elif escolha == "2": # Carregamento da tela de inventario
+                                limparTela()
+                                loading("\nCarregando inventário...", 0.5)
+                                limparTela()
+                                jogador.getInventario()
+                                limparTela()
+                            elif escolha == "3":
+                                limparTela()
+                                loading("\nSalvando...", 0.5)
+                                limparTela()
+                                atualizar_tabela(jogador)# Atualiza todos os dados do jogador no "Bando" de Dados
+                                loading("\nJogo Salvo.", 1)
+                                limparTela()
+                            elif escolha == "4" or fim_de_jogo == True:
+                                break
+                            jogador.getLevel()
+                    elif int(escolha) == 6:
+                        break
+                    else:
+                        print("V----------------------------------V")
+                        print("|          Opção inválida          |")
+                        print("^----------------//----------------^")
+                else:
+                    print("V----------------------------------V")
+                    print("|          Opção inválida          |")
+                    print("^----------------//----------------^")
         else:
-            print("Nada foi encontrado.")
-            sleep(1.5)
-            limparTela()
-    elif escolha == "2": #Carregamento da tela de inventario
-        limparTela()
-        loading("\nCarregando inventário...", 0.5)
-        limparTela()
-        jogador.getInventario()
-        limparTela()
-    elif escolha == "3":
-        limparTela()
-        loading("\nSalvando...", 0.5)
-        limparTela()
-        atualizar_tabela(jogador)#Atualiza todos os dados do jogador no "Bando" de Dados
-        loading("\nJogo Salvo.", 1)
-        limparTela()
-    elif escolha == "4" or fim_de_jogo == True:
+            print("Nenhum jogador encontrado!")
+    elif escolhaMenu == "3":
         break
-    jogador.getLevel()
+    else:
+        print("V----------------------------------V")
+        print("|          Opção inválida          |")
+        print("^----------------//----------------^")
+
 print("Você saiu do Jogo!")
 sleep(2)

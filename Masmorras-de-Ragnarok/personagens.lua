@@ -11,7 +11,12 @@ function scene:create( event )
     -- Assign "self.view" to local variable "sceneGroup" for easy reference
     local sceneGroup = self.view
  
-    local menuBack = display.newRect( display.contentCenterX, display.contentCenterY, largura, altura)
+    local telaCriacao = display.newRect( display.contentCenterX, display.contentCenterY, largura, altura)
     -- Insert object into "sceneGroup"
-    sceneGroup:insert( menuBack )
+    local titulo2 = display.newText("Dungeon of Ragnarok", largura/2, altura/2, "verdana", 28)
+    titulo2:setFillColor( 255,0,0 )
 end
+
+scene:addEventListener( "create", scene )
+
+return scene

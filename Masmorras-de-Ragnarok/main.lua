@@ -3,4 +3,13 @@ display.setStatusBar( display.HiddenStatusBar )
 
 local sc = require("composer")
 
-sc.gotoScene("menu")
+local options = {
+    effect = "fade",
+    time = 500,
+    params = {
+        someKey = "someValue",
+        someOtherKey = 10
+    }
+}
+
+sc.gotoScene("menu", options)

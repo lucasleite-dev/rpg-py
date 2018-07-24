@@ -6,6 +6,15 @@ local scene = sc.newScene()
 local largura = display.contentWidth
 local altura = display.contentHeight
 
+local options = {
+    effect = "fade",
+    time = 500,
+    params = {
+        someKey = "someValue",
+        someOtherKey = 10
+    }
+}
+
 --tela do fundo preto
 local background = display.newRect(display.contentCenterX, display.contentCenterY, largura, altura)
 	background:setFillColor(255,255,255)

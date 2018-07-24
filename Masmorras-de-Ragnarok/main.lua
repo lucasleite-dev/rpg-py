@@ -9,6 +9,17 @@ local scene = composer.newScene()
 local largura = display.contentWidth
 local altura = display.contentHeight
 
+local _CX = display.contentCenterX
+local _CY = display.contentCenterY
+local imgW = 440 -- width of image 
+local imgH = 623 -- height of image
+local imgR = imgH / imgW
+local screenW = display.contentWidth - 2 * display.screenOriginX 
+local screenH = display.contentHeight - 2 * display.screenOriginY 
+local screenR = screenH / screenW
+local factor = imgR > screenR and screenW / imgW or screenH / imgH
+
+
 local options = {
     effect = "fade",
     time = 500,
@@ -18,11 +29,9 @@ local options = {
     }
 }
 
-local fundo_tela = display.newImageRect("Imagens_Jogo/tela_de_login.jpg", display.contentWidth, display.contentHeight)
-fundo_tela.anchorX = 0
-fundo_tela.anchorY = 0
-fundo_tela.x = 0
-fundo_tela.y = 0
+local fundo_tela = display.newImageRect("Imagens_Jogo/tela_de_login.jpg",  imgW * factor, imgH * factor )
+fundo_tela.x = largura/2
+fundo_tela.y = altura/2
 --Botão
 local botao = criar.newButton {
 	defaultFile="Imagens_Jogo/botao_iniciarjogo.png",
@@ -30,7 +39,6 @@ local botao = criar.newButton {
 	width = 120, height = 50,
 	--onRelease = composer.gotoScene( "menu", options )
 }
-local titulo = display.newText("Dungeon of Ragnarok", 157, 90, "enchanted land", 38)
 
 function botaoTap()
 	composer.gotoScene( "menu", options )

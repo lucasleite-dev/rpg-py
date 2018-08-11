@@ -1,5 +1,9 @@
 # Importações
 from Classes.Jogador.Jogador import Jogador
+from Classes.Jogador.Jogador import Espadachim
+from Classes.Jogador.Jogador import Mago
+from Classes.Jogador.Jogador import Arqueiro
+from Classes.Jogador.Jogador import Tanker
 from Classes.Batalha.Batalha import batalha
 # Importações de monstros
 from Classes.Inimigos.Inimigos import Rato
@@ -11,6 +15,7 @@ from time import sleep
 import os
 import platform
 import sqlite3
+import json
 
 # Variáveis SQL
 conexão = sqlite3.connect('personages.db') # Conecta no Banco de dados
@@ -39,23 +44,26 @@ def loading(mensagem, tempo):
     print("\n")
 
 def criar_tabela():# Cria uma tabela
-    cursor.execute("CREATE TABLE IF NOT EXISTS personagens (nome text, level integer, exp integer, exp_max integer, vida integer, vida_max integer, mana integer, mana_max integer, ataque integer, defesa integer, status text, classe text)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS personagens (nome text, level integer, inventario text, exp integer, exp_max integer, vida integer, vida_max integer, mana integer, mana_max integer, ataque integer, defesa integer, status text, classe text)")
 
 # Insere o novo char no banco de dados
 def inserir_na_tabela(jogador):
+    jogador.inventario = json.dumps(jogador.inventario)
     cursor.execute("""
-        INSERT INTO personagens (nome, level, exp, exp_max, vida, vida_max, mana, mana_max, ataque, defesa, status, classe)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?)
-        """, (jogador.name, jogador.level, jogador.exp, jogador.exp_max, jogador.vida, jogador.vida_max, jogador.mana, jogador.mana_max, jogador.ataque, jogador.defesa, jogador.status, jogador.classe))
+        INSERT INTO personagens (nome, level, inventario, exp, exp_max, vida, vida_max, mana, mana_max, ataque, defesa, status, classe)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
+        """, (jogador.nome, jogador.level, jogador.inventario, jogador.exp, jogador.exp_max, jogador.vida, jogador.vida_max, jogador.mana, jogador.mana_max, jogador.ataque, jogador.defesa, jogador.status, jogador.classe))
     conexão.commit()
+    #jogador.inventario = json.loads(jogador.inventario)
 
 # Atualiza o jogador na tabela quando o jogador escolher Salvar no menu.
 def atualizar_tabela(jogador):
+    jogador.inventario = json.dumps(jogador.inventario)
     cursor.execute("""
         UPDATE personagens
-        SET level = ?, exp = ?, exp_max = ?, vida = ?, vida_max = ?, mana = ?, mana_max = ?, ataque = ?, defesa = ?, status = ?
+        SET level = ?, inventario = ?, exp = ?, exp_max = ?, vida = ?, vida_max = ?, mana = ?, mana_max = ?, ataque = ?, defesa = ?, status = ?
         WHERE nome = ?
-        """, (jogador.level, jogador.exp, jogador.exp_max, jogador.vida, jogador.vida_max, jogador.mana, jogador.mana_max, jogador.ataque, jogador.defesa, jogador.status, jogador.name))
+        """, (jogador.level, jogador.inventario, jogador.exp, jogador.exp_max, jogador.vida, jogador.vida_max, jogador.mana, jogador.mana_max, jogador.ataque, jogador.defesa, jogador.status, jogador.nome))
     conexão.commit()
 # Tela inicial.
 criar_tabela()
@@ -83,13 +91,30 @@ while True:
         print("+----------------------------------+")
         print("|       Criação de Personagem      |")
         print("V----------------------------------V")
-        jogador.name = input('Nome: ')
-        print("Classes: \n1 - Guerreiro")
+        nome = input('Nome: ')
+        print("Classes: \n1 - Espadachim\n2 - Mago\n3 - Arqueiro\n4 - Tanker")
         escolhaClasse = input('| ?:')
         if escolhaClasse == '1':
-            jogador.classe = 'Guerreiro'
+            jogador = Espadachim()
+            jogador.nome = nome
             inserir_na_tabela(jogador)
             print("Personagem criado com sucesso.")
+        elif escolhaClasse == '2':
+            jogador = Mago()
+            jogador.nome = nome
+            inserir_na_tabela(jogador)
+            print("Personagem criado com sucesso.")
+        elif escolhaClasse == '3':
+            jogador = Arqueiro()
+            jogador.nome = nome
+            inserir_na_tabela(jogador)
+            print("Personagem criado com sucesso.")
+        elif escolhaClasse == '4':
+            jogador = Tanker()
+            jogador.nome = nome
+            inserir_na_tabela(jogador)
+            print("Personagem criado com sucesso.")
+        limparTela()
     # Escolhe o personagem "Ainda n ta pronto, apenas mostra todos os personagens salvos no banco"
     elif escolhaMenu == "2":
         cursor.execute("""
@@ -105,7 +130,7 @@ while True:
                 seletor[c] = linha
             while True:
                 print("+----------------------------------+")
-                print("|     Escolha de personagens       |")
+                print("|     Seleção de personagens       |")
                 print("V----------------------------------V")
                 for key in seletor:
                     print(f"| {key} - {seletor[key][0]} ({seletor[key][1]})" + " "*(27-len(str(seletor[key][0]))-len(str(key))-len(str(seletor[key][1]))) + "|")
@@ -115,42 +140,44 @@ while True:
                         print(f"| {str(j)} - [Vazio]                      |")
                         j += 1
                     j = 0
-                print("| 6 - Voltar                       |")
+                print("| 6 - Menu                         |")
                 print("^----------------//----------------^")
                 escolha = input("| ?: ")
                 limparTela()
                 if escolha.isnumeric():
                     if int(escolha) > 0 and int(escolha) <= c:
-                        personagem_name = seletor[int(escolha)][0]
+                        personagem_nome = seletor[int(escolha)][0]
                         cursor.execute(f"""
-                        SELECT * FROM personagens WHERE nome = '{personagem_name}';
+                        SELECT * FROM personagens WHERE nome = '{personagem_nome}';
                         """)
                         fetch = cursor.fetchall()
                         for item in fetch:
-                            jogador.name = item[0]
+                            jogador.nome = item[0]
                             jogador.level = item[1]
-                            jogador.exp = item[2]
-                            jogador.exp_max = item[3]
-                            jogador.vida = item[4]
-                            jogador.vida_max = item[5]
-                            jogador.mana = item[6]
-                            jogador.mana_max = item[7]
-                            jogador.ataque = item[8]
-                            jogador.defesa = item[9]
-                            jogador.status = item[10]
-                            jogador.classe = item[11]
+                            jogador.inventario = item[2]
+                            jogador.exp = item[3]
+                            jogador.exp_max = item[4]
+                            jogador.vida = item[5]
+                            jogador.vida_max = item[6]
+                            jogador.mana = item[7]
+                            jogador.mana_max = item[8]
+                            jogador.ataque = item[9]
+                            jogador.defesa = item[10]
+                            jogador.status = item[11]
+                            jogador.classe = item[12]
+                        jogador.inventario = json.loads(jogador.inventario)
                         explorar = ""
                         inimigo = ""
                         combate = False
                         while True:
                             jogador.getStatus()
                             print("+----------------------------------+")
-                            print("|               Menu               |")
+                            print("|              Ações               |")
                             print("V----------------------------------V")
                             print("| 1 - Explorar                     |")
                             print("| 2 - Inventário                   |")
                             print("| 3 - Salvar                       |")
-                            print("| 4 - Sair do Jogo                 |")
+                            print("| 4 - Seleção de personagem        |")
                             print("^----------------//----------------^")
                             escolha = input("| ?: ")
                             limparTela()
@@ -168,7 +195,7 @@ while True:
                                     limparTela()
                                     jogador.getStatus()
                                     inimigo.getStatus()
-                                    print(f"Entrou em combate com um {inimigo.name}!")
+                                    print(f"Entrou em combate com um {inimigo.nome}!")
                                     print(30*"-")
                                     while inimigo.status == "Vivo":
                                         print("1 - Lutar\n2 - Fugir.") # Menu de Ataques
@@ -185,10 +212,20 @@ while True:
                                             break
                                         # Quando o jogador morre.
                                         if jogador.vida <= 0:
-                                            print(f"{jogador.name} morreu!\nGAMER OVER")
+                                            print(f"{jogador.nome} morreu!\nGAMER OVER")
                                             fim_de_jogo = True
                                             break
                                     if inimigo.status == "Morto":
+                                        """if drop_item == 2:
+                                            if 'Poção de Vida' in jogador.inventario.keys():
+                                                jogador.inventario['Poção de Vida'] += 1
+                                            else:
+                                                jogador.inventario['Poção de Vida'] = 1
+                                        elif drop_item == 3:
+                                            if 'Poção de Mana' in jogador.inventario.keys():
+                                                jogador.inventario['Poção de Mana'] += 1
+                                            else:
+                                                jogador.inventario['Poção de Mana'] = 1"""
                                         combate = False
                                 else:
                                     print("Nada foi encontrado.")
@@ -207,6 +244,7 @@ while True:
                                 atualizar_tabela(jogador)# Atualiza todos os dados do jogador no "Bando" de Dados
                                 loading("\nJogo Salvo.", 1)
                                 limparTela()
+                                jogador.inventario = json.loads(jogador.inventario)
                             elif escolha == "4" or fim_de_jogo == True:
                                 break
                             jogador.getLevel()

@@ -15,7 +15,7 @@ def limparTela():
 
 class Jogador:
 
-    def __init__(self, level=1, vida=300, vida_max=300, mana=150, mana_max=150,ataque=55,defesa=110, status='Vivo', name='', classe=''):
+    def __init__(self, level=1, vida=0, vida_max=0, mana=0, mana_max=0,ataque=0, ataque_magico=0,defesa=0, status='Vivo', nome='', classe=''):
         self.level = level
         self.exp = 0
         self.exp_max = round(75)
@@ -26,8 +26,8 @@ class Jogador:
         self.ataque = ataque
         self.defesa = defesa
         self.status = status
-        self.inventario = {"Poção de Mana": 2, "Poção de Vida": 3}
-        self.name = name
+        self.inventario = {}
+        self.nome = nome
         self.classe = classe
 
     def levaDano(self, dano):
@@ -43,7 +43,7 @@ class Jogador:
         print("+----------------------------------+")
         print("|              Status              |")
         print("V----------------------------------V")
-        print(f"| Nome  : {self.name}" + " "*(25-len(self.name)) + "|")
+        print(f"| Nome  : {self.nome}" + " "*(25-len(self.nome)) + "|")
         print(f"| HP    : {self.vida}" + f"/{self.vida_max}" + " "*(24-len(str(self.vida))-len(str(self.vida_max))) + "|")
         print(f"| MP    : {self.mana}" + f"/{self.mana_max}" +  " "*(24-len(str(self.mana))-len(str(self.mana_max))) + "|")
         print(f"| Exp   : {self.exp}" + f"/{self.exp_max}" + " "*(24-len(str(self.exp))-len(str(self.exp_max))) + "|")
@@ -57,6 +57,10 @@ class Jogador:
         print("V----------------------------------V")
         if self.inventario == {}:
             print("| [Vazio]                          |")
+            print("+----------------------------------+")
+            print("| Pressione enter para voltar      |")
+            print("^----------------//----------------^")
+            input("")
         else:
             for key in self.inventario:
                 resto = (30-len(key))-len(str(self.inventario[key]))
@@ -88,11 +92,7 @@ class Jogador:
                     self.vida = self.vida_max
                 self.inventario["Poção de Vida"] -= 1
             else:
-                print("V----------------------------------V")
-                print("|          Sem unidades.           |")
-                print("^----------------//----------------^")
-                sleep(1)
-
+                del(self.inventario["Poção de Vida"])
 
     def pocaoMana(self): # MANA
         if self.mana == self.mana_max:
@@ -107,15 +107,14 @@ class Jogador:
                     self.mana = self.mana_max
                 self.inventario["Poção de Mana"] -= 1
             else:
-                print("V----------------------------------V")
-                print("|          Sem unidades.           |")
-                print("^----------------//----------------^")
-                sleep(1)
+                del(self.inventario["Poção de Mana"])
 
     # Menu para usar itens
     def menuItens(self):
         menu = True
         while menu:
+            limparTela()
+            self.getStatus()
             print("+----------------------------------+")
             print("|            Usar Item             |")
             print("V----------------------------------V")
@@ -139,9 +138,11 @@ class Jogador:
                 escolha = input("| ?: ")
                 if escolha == '1':
                     self.pocaoVida()
-                    break
+                    limparTela()
                 elif escolha == '2':
                     self.pocaoMana()
+                    limparTela()
+                elif escolha == '3':
                     break
                 else:
                     print("+----------------------------------+")
@@ -165,3 +166,23 @@ class Jogador:
             print("^----------------//----------------^")
             input("")
             limparTela()
+
+class Espadachim(Jogador):
+
+    def __init__(self):
+        super().__init__(classe='Espadachim', vida=220, vida_max=220, mana=190, mana_max=190,ataque=75,defesa=100)
+
+class Mago(Jogador):
+
+    def __init__(self):
+        super().__init__(classe='Mago', vida=150, vida_max=150, mana=300, mana_max=200,ataque=25, ataque_magico = 100,defesa=80)
+
+class Arqueiro(Jogador):
+
+    def __init__(self):
+        super().__init__(classe='Arqueiro', vida=175, vida_max=175, mana=150, mana_max=150,ataque=85,defesa=90)
+
+class Tanker(Jogador):
+
+    def __init__(self):
+        super().__init__(classe='Tanker', vida=300, vida_max=300, mana=125, mana_max=125,ataque=55,defesa=120)

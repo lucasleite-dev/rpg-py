@@ -16,8 +16,6 @@ import os
 import platform
 import sqlite3
 import json
-#ALTERAÇÕES
-#1.0 Melhoramento do inventário
 # Variáveis SQL
 conexão = sqlite3.connect('personages.db') # Conecta no Banco de dados
 cursor = conexão.cursor() # comando cursor

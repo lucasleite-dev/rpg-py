@@ -92,6 +92,8 @@ class Jogador:
                 if self.vida > self.vida_max:
                     self.vida = self.vida_max
                 self.inventario["Poção de Vida"] -= 1
+                if self.inventario["Poção de Vida"] == 0:
+                    del(self.inventario["Poção de Vida"])
 
     def pocaoMana(self): # MANA
         if self.mana == self.mana_max:
@@ -138,13 +140,23 @@ class Jogador:
                 elif list(self.inventario.keys())[escolha] == 'Poção de Mana':
                     self.pocaoMana()
                     limparTela()
-                elif escolha == '666':
-                    break
                 else:
                     print("+----------------------------------+")
                     print("|             Inválido             |")
                     print("^----------------//----------------^")
-
+            self.getStatus()
+            escolha_sair = input("Deseja voltar para o menu (S/N)? ").lower()
+            if escolha_sair == 's':
+                limparTela()
+                break
+            elif escolha_sair == 'n':
+                limparTela()
+                pass
+            else:
+                print("+----------------------------------+")
+                print("|             Inválido             |")
+                print("^----------------//----------------^")
+    # Faz o jogador subir de level
     def getLevel(self):
         if self.exp >= self.exp_max and self.status == 'Vivo':
             self.level += 1

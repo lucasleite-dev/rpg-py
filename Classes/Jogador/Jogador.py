@@ -92,8 +92,6 @@ class Jogador:
                 if self.vida > self.vida_max:
                     self.vida = self.vida_max
                 self.inventario["Poção de Vida"] -= 1
-                if self.inventario["Poção de Vida"] == 0:
-                    del(self.inventario["Poção de Vida"])
 
     def pocaoMana(self): # MANA
         if self.mana == self.mana_max:
@@ -129,46 +127,23 @@ class Jogador:
             else:
                 for key, item in enumerate(self.inventario):
                     resto = (26-len(item))-len(str(self.inventario[item]))
-                    print(f"| {key + 1} - {item} : {self.inventario[item]}" + " "*resto + "|")
+                    print(f"| {key} - {item} : {self.inventario[item]}" + " "*resto + "|")
                 print("+----------------------------------+")
                 print("| Selecione uma opção              |")
                 print("^----------------//----------------^")
                 escolha = int(input("| ?: "))
-                if escolha == key:
-                    if item == 'Poção de Vida':
-                        self.pocaoVida()
-                        limparTela()
-                    elif item == 'Poção de Mana':
-                        self.pocaoMana()
-                        limparTela()
+                if list(self.inventario.keys())[escolha] == 'Poção de Vida':
+                    self.pocaoVida()
+                    limparTela()
+                elif list(self.inventario.keys())[escolha] == 'Poção de Mana':
+                    self.pocaoMana()
+                    limparTela()
                 elif escolha == '666':
                     break
                 else:
                     print("+----------------------------------+")
                     print("|             Inválido             |")
                     print("^----------------//----------------^")
-                """key = "Poção de Vida"
-                resto = (26-len(key))-len(str(self.inventario[key]))
-                print(f"| 1 - {key} : {self.inventario[key]}" + " "*resto + "|")
-                key2 = "Poção de Mana"
-                resto = (26-len(key2))-len(str(self.inventario[key2]))
-                print(f"| 2 - {key2} : {self.inventario[key2]}" + " "*resto + "|")
-                print("+----------------------------------+")
-                print("| Selecione uma opção              |")
-                print("^----------------//----------------^")
-                escolha = input("| ?: ")
-                if escolha == '1':
-                    self.pocaoVida()
-                    limparTela()
-                if escolha == '2':
-                    self.pocaoVida()
-                elif escolha == '666':
-                    break
-                else:
-                    print("+----------------------------------+")
-                    print("|             Inválido             |")
-                    print("^----------------//----------------^")"""
-                
 
     def getLevel(self):
         if self.exp >= self.exp_max and self.status == 'Vivo':

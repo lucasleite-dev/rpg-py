@@ -4,6 +4,7 @@ from random import uniform
 from time import sleep
 import platform
 import os
+from Classes.Item import Item
 
 #Limpa a tela
 def limparTela():
@@ -66,17 +67,17 @@ class Jogador:
                 resto = (30-len(key))-len(str(self.inventario[key]))
                 print(f"| {key} : {self.inventario[key]}" + " "*resto + "|")
             print("+----------------------------------+")
-            print("| 1 - Para voltar                  |")
-            print("| 2 - Para usar algum item         |")
+            print("| 1 - Para usar algum item         |")
+            print("| 2 - Para voltar                  |")
             print("^----------------//----------------^")
             escolha = input("| ?: ")
             while escolha != "1" and escolha != "2":
                 print("Opção inválida")
                 escolha = input("| ?: ")
             if escolha == "1":
-                pass
-            else:
                 self.menuItens()
+            else:
+                pass
 
     # Poções
     def pocaoVida(self): # VIDA
@@ -91,8 +92,8 @@ class Jogador:
                 if self.vida > self.vida_max:
                     self.vida = self.vida_max
                 self.inventario["Poção de Vida"] -= 1
-            else:
-                del(self.inventario["Poção de Vida"])
+                if self.inventario["Poção de Vida"] == 0:
+                    del(self.inventario["Poção de Vida"])
 
     def pocaoMana(self): # MANA
         if self.mana == self.mana_max:
@@ -106,8 +107,8 @@ class Jogador:
                 if self.mana > self.mana_max:
                     self.mana = self.mana_max
                 self.inventario["Poção de Mana"] -= 1
-            else:
-                del(self.inventario["Poção de Mana"])
+                if self.inventario["Poção de Mana"] == 0:
+                    del(self.inventario["Poção de Mana"])
 
     # Menu para usar itens
     def menuItens(self):
@@ -126,7 +127,27 @@ class Jogador:
                 input("")
                 menu = False
             else:
-                key = "Poção de Vida"
+                for key, item in enumerate(self.inventario):
+                    resto = (26-len(item))-len(str(self.inventario[item]))
+                    print(f"| {key + 1} - {item} : {self.inventario[item]}" + " "*resto + "|")
+                print("+----------------------------------+")
+                print("| Selecione uma opção              |")
+                print("^----------------//----------------^")
+                escolha = int(input("| ?: "))
+                if escolha == key:
+                    if item == 'Poção de Vida':
+                        self.pocaoVida()
+                        limparTela()
+                    elif item == 'Poção de Mana':
+                        self.pocaoMana()
+                        limparTela()
+                elif escolha == '666':
+                    break
+                else:
+                    print("+----------------------------------+")
+                    print("|             Inválido             |")
+                    print("^----------------//----------------^")
+                """key = "Poção de Vida"
                 resto = (26-len(key))-len(str(self.inventario[key]))
                 print(f"| 1 - {key} : {self.inventario[key]}" + " "*resto + "|")
                 key2 = "Poção de Mana"
@@ -139,15 +160,15 @@ class Jogador:
                 if escolha == '1':
                     self.pocaoVida()
                     limparTela()
-                elif escolha == '2':
-                    self.pocaoMana()
-                    limparTela()
-                elif escolha == '3':
+                if escolha == '2':
+                    self.pocaoVida()
+                elif escolha == '666':
                     break
                 else:
                     print("+----------------------------------+")
                     print("|             Inválido             |")
-                    print("^----------------//----------------^")
+                    print("^----------------//----------------^")"""
+                
 
     def getLevel(self):
         if self.exp >= self.exp_max and self.status == 'Vivo':
@@ -158,6 +179,8 @@ class Jogador:
             self.mana_max += 5
             self.vida = self.vida_max
             self.mana = self.mana_max
+            self.ataque += 5
+            self.defesa += 5
             self.getStatus()
             print(12*"*"+"  LEVEL UP  "+"*"*12)
             sleep(1.5)

@@ -6,9 +6,9 @@ from Classes.Jogador.Jogador import Arqueiro
 from Classes.Jogador.Jogador import Tanker
 from Classes.Batalha.Batalha import batalha
 # Importações de monstros
-from Classes.Inimigos.Inimigos import Rato
-from Classes.Inimigos.Inimigos import Urso
-
+from Classes.Inimigos.Inimigos import Skelet
+from Classes.Inimigos.Inimigos import Bear_Zombie
+from Classes.Inimigos.Inimigos import Demon
 #  Bibliotecas padrão
 from random import randint
 from time import sleep
@@ -16,7 +16,8 @@ import os
 import platform
 import sqlite3
 import json
-
+#ALTERAÇÕES
+#1.0 Melhoramento do inventário
 # Variáveis SQL
 conexão = sqlite3.connect('personages.db') # Conecta no Banco de dados
 cursor = conexão.cursor() # comando cursor
@@ -184,12 +185,15 @@ while True:
                             if escolha == "1": # Carregamento de tela da Exploração
                                 jogador.getStatus()
                                 loading("Explorando...", 0.5)
-                                explorar = randint(1, 5) # gera um número aleátorio, se for 1,2,3 = fight com rato
-                                if explorar <= 3: # Declara que o inimigo é um Rato
-                                    inimigo = Rato()
+                                explorar = randint(1, 10) # gera um número aleátorio, se for 1,2,3 = fight com rato
+                                if explorar <= 5: # Declara que o inimigo é um Rato
+                                    inimigo = Skelet()
                                     combate = True
-                                elif explorar == 4: # Declara que o inimigo é um Urso
-                                    inimigo = Urso()
+                                elif explorar > 5 and explorar < 10: # Declara que o inimigo é um Urso
+                                    inimigo = Bear_Zombie()
+                                    combate = True
+                                elif explorar == 10:
+                                    inimigo = Demon()
                                     combate = True
                                 if combate == True: # Tela de Combate
                                     limparTela()

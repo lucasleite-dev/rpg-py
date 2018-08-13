@@ -2,10 +2,8 @@
 from time import sleep
 import os
 import platform
-from Classes.Item import Item
-#Variáveis
 
-poção_cura = Item("Poção de Cura", "Potion", "Cura em 50 de vida.", 50)
+#Variáveis
 
 def limparTela():
     sistema = platform.system()
@@ -68,11 +66,15 @@ def batalha(jogador, inimigo):
             print("2 - para largar")
             decisao = input("|? : ")
             if decisao == '1':
-                if item in jogador.inventario:
-                    jogador.inventario[item] += 1
+                if len(jogador.inventario) < 20:
+                    if item in jogador.inventario:
+                        jogador.inventario[item] += 1
+                    else:
+                        jogador.inventario[item] = 1
                 else:
-                    jogador.inventario[item] = 1
-            else: 
+                    print("Inventário cheio.")
+                    pass
+            elif decisao == '2': 
                 pass
             limparTela()
         #combatLog(jogador, inimigo)

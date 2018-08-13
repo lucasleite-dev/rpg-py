@@ -30,12 +30,17 @@ class Inimigo:
         print(f"| Estado: {self.status}" + " "*(25-len(str(self.status))) + "|")
         print("^----------------//----------------^")
 
-class Rato(Inimigo):
+class Skelet(Inimigo):
 
     def __init__(self):
-        super().__init__("Rato", drop={'Poção de Vida':1})
+        super().__init__("Skelet", drop={'Poção de Vida':1})
 
-class Urso(Inimigo):
+class Bear_Zombie(Inimigo):
 
     def __init__(self):
-        super().__init__("Urso", vida=225, vida_max=225, ataque=50, defesa=150, exp=75, drop={'Poção de Vida':1, 'Poção de Mana':1})
+        super().__init__("Bear Zombie", vida=225, vida_max=225, ataque=50, defesa=150, exp=75, drop={'Poção de Vida':1, 'Poção de Mana':1})
+
+class Demon(Inimigo):
+
+    def __init__(self):
+        super().__init__("Demon", vida=400, vida_max=400, ataque=100, defesa=190, exp=150, drop={'Poção de Vida':1, 'Poção de Mana':1, 'Sword of Demon':1})

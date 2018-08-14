@@ -13,23 +13,28 @@ def limparTela():
         os.system("clear")
 
 def combatLog(jogador, inimigo, forca=1):
-    danoJogador = 0
-    danoInimigo = 0
     print("+----------------------------------+")
     print("|            Combat Log            |")
     print("V----------------------------------V")
-    print(f"| {jogador.name} atacou e causou {danoJogador*forca} de dano.")
-    print(f"| {jogador.name} recebeu {danoInimigo} de dano.")
+    print(f"| {jogador.nome} atacou e causou {int(jogador.ataque / (1+inimigo.defesa/100))*forca} de dano.")
+    print(f"| {jogador.nome} recebeu {int(inimigo.ataque / (1+jogador.defesa/100))} de dano.")
     print("^----------------//----------------^")
 
 def verificaStatus(jogador, inimigo):
-        jogador.getStatus()
-        inimigo.getStatus()
+    jogador.getStatus()
+    inimigo.getStatus()
 
 def batalha(jogador, inimigo):
+    hp_antes = hp_depois = hp_atual = inimigo_antes = inimigo_depois = inimigo_atual = 0
     while inimigo.status == "Vivo":
         limparTela()
         verificaStatus(jogador,inimigo)
+        print("+----------------------------------+")
+        print("|            Combat Log            |")
+        print("V----------------------------------V")
+        print(f"| {jogador.nome} atacou e causou {inimigo_atual} de dano.")
+        print(f"| {jogador.nome} recebeu {hp_atual} de dano.")
+        print("^----------------//----------------^") 
         print("+----------------------------------+")
         print("|               Menu               |")
         print("V----------------------------------V")
@@ -40,16 +45,28 @@ def batalha(jogador, inimigo):
         escolha_ataque = input("| ?: ")
         print(20*"=")
         if escolha_ataque == "1":
+            hp_antes = jogador.vida
+            inimigo_antes = inimigo.vida
             inimigo.levaDano(jogador.ataque)#Quando o inimigo recebe dano
             jogador.levaDano(inimigo.ataque)#Quando o jogador recebe dano
+            hp_depois = jogador.vida
+            inimigo_depois = inimigo.vida
+            hp_atual = hp_antes - hp_depois
+            inimigo_atual = inimigo_antes - inimigo_depois
         elif escolha_ataque == "2":
             if jogador.mana < 30: # Mana insuficiente para o ataque
                 print("Mana insuficiente")
                 sleep(0.5)
             else:
+                hp_antes = jogador.vida
+                inimigo_antes = inimigo.vida
                 inimigo.levaDano(jogador.ataque*2)#Quando o inimigo recebe dano
                 jogador.levaDano(inimigo.ataque)#Quando o jogador recebe dano
                 jogador.mana -= 30
+                hp_depois = jogador.vida
+                inimigo_depois = inimigo.vida
+                hp_atual = hp_antes - hp_depois
+                inimigo_atual = inimigo_antes - inimigo_depois
         elif escolha_ataque == "3":
             limparTela()
             jogador.menuItens()

@@ -4,7 +4,6 @@ from random import uniform
 from time import sleep
 import platform
 import os
-from Classes.Item import Item
 
 #Limpa a tela
 def limparTela():
@@ -145,7 +144,7 @@ class Jogador:
                     print("|             Inválido             |")
                     print("^----------------//----------------^")
             self.getStatus()
-            escolha_sair = input("Deseja voltar para o menu (S/N)? ").lower()
+            escolha_sair = input("Deseja voltar para o menu (S/N)?\n| ?: ").lower()
             if escolha_sair == 's':
                 limparTela()
                 break
